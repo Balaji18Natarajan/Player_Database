@@ -1,6 +1,7 @@
 
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -53,12 +54,16 @@ public class results extends HttpServlet {
 				Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Players_Database","root","balaji");
 				Statement stmt = con.createStatement();
 				int executeUpdate = stmt.executeUpdate("insert into Players_Details values ("+id+",'"+name+"',"+age+",'"+email+"','"+sports+"','"+address+"')");
+	            response.setContentType("text/html");
+	            
+	            PrintWriter out = response.getWriter();
 				if(executeUpdate > 0 ) {
-					System.out.println("Record Updated Successfully");
-					HttpSession session = request.getSession();
-					session.setAttribute("id", id);
-					response.sendRedirect("index.jsp");
+					out.println("\n Record Updated Successfully");
 				}
+				else {
+					out.println("\n Record invalid");
+				}
+			
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

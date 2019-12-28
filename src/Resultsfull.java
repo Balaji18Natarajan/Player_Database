@@ -1,6 +1,7 @@
 
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -52,20 +53,30 @@ public class Resultsfull extends HttpServlet {
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("select * from Players_Details WHERE ID = "+id+"");
 			 
-			while (rs.next()) {
+			if (rs.next()) {
 	            String name = rs.getString("Name");
 	            int id1 = rs.getInt("ID");
 	            int age = rs.getInt("Age");
 	            String email = rs.getString("Email");
 	            String sports = rs.getString("Sports");
 	            String address = rs.getString("Address");
-	            System.out.println(name + "\t" + id1 +
+	            response.setContentType("text/html");
+	            
+	            PrintWriter out = response.getWriter();
+	            
+	            out.println("<html><head><title>Details</title>");
+	            out.println("<body>");
+	            out.println("\r\n Details of Player" +id1);
+	             
+	            out.println("\r\n" + name + "\t" + id1 +
 	                               "\t" + age + "\t" + email +
 	                               "\t" + sports + "\t" +address);
-	            HttpSession session = request.getSession();
-				session.setAttribute("id", id);
-				response.sendRedirect("index.jsp");
+	            out.println("</body></head></html>");
+                
 	        }
+			else {
+				System.out.println("Record invalid");
+			}
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

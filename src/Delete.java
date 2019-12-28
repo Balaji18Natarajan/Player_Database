@@ -1,6 +1,7 @@
 
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -49,13 +50,16 @@ public class Delete extends HttpServlet {
 			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Players_Database","root","balaji");
 			Statement stmt = con.createStatement();
 			int rs = stmt.executeUpdate("DELETE from Players_Details WHERE ID = "+id+"");
-			 
+            response.setContentType("text/html");
+            
+            PrintWriter out = response.getWriter();
 			if (rs > 0) {
-	            System.out.println("\t" + id + "Player Details deleted");
-	            HttpSession session = request.getSession();
-				session.setAttribute("id", id);
-				response.sendRedirect("index.jsp");
+	            out.println("\t" + id + "Player Details deleted");
 	        }
+			else {
+				out.println("Record invalid");
+			}
+			
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
